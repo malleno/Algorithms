@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+using namespace std;
+
+template <class T>
+void printVector(vector<T> vec){
+    for(auto item : vec){
+        cout << item << " ";
+    }
+    cout << endl;
+}
+
+template <class T>
+void quick_sort(vector<T>& vec)
+{
+    if(vec.size() <= 1){
+        return;
+    }
+
+    T middle = vec.at(vec.size() / 2);
+    int i = 0;
+    int j = vec.size() - 1;
+    while(i <= j){
+        while(vec.at(i) < middle){
+            ++i;
+        }
+        while(vec.at(j) > middle){
+            --j;
+        }
+        if(i <= j){
+            swap(vec[i],vec[j]);
+            ++i;
+            --j;
+        }
+
+    }
+
+    vector<T> leftVec = vector<T>(begin(vec), begin(vec) + j + 1);
+    vector<T> rightVec = vector<T>(begin(vec) + j + 1, end(vec));
+
+    quick_sort(leftVec);
+    quick_sort(rightVec);
+
+    for(T item : rightVec){
+        leftVec.push_back(item);
+    }
+
+    vec = leftVec;
+}
+
+template <class T>
+bool isSorted(vector<T> vec){
+    for(int i =0; i< vec.size() - 1; ++i){
+        if(vec.at(i) > vec.at(i + 1)){
+            return false;
+        }
+    }
+    return true;
+}
+
+int main(){
+    vector<int> vec;
+    for(int i = 0; i < 100; ++i){
+        for (int j = 0; j < 10; ++j){
+            vec.push_back(rand());
+        }
+        printVector(vec);
+        quick_sort(vec);
+        printVector(vec);
+        if(!isSorted(vec)){
+         cout << "ERROR";
+        }
+        vec.clear();
+
+    }
+	return 0;
+}
